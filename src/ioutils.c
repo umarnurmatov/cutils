@@ -6,6 +6,7 @@
 #include <linux/limits.h>
 
 #include "assertutils.h"
+#include "logutils.h"
 
 void clear_stdin_buffer()
 {
@@ -25,7 +26,7 @@ enum io_err_t input_double(double *d)
             return IO_ERR_EOF_REACHED;
             break;
         case 1:
-            return IO_ERR_ASSIGMENT_SUCCESS;
+            return IO_ERR_NONE;
             break;
         default:
             return IO_ERR_ASSIGMENT_FAIL;
@@ -45,7 +46,7 @@ enum io_err_t input_double_until_correct(double *d)
         else if(errcode == IO_ERR_ASSIGMENT_FAIL) {
             fprintf(stderr, "\tEnter a valid numeric value.\n\t");
         }
-    } while(errcode != IO_ERR_ASSIGMENT_SUCCESS);
+    } while(errcode != IO_ERR_NONE);
     return errcode;
 }
 
@@ -124,4 +125,56 @@ io_err_t utils_puts(const char *str)
     return IO_ERR_NONE;
 }
 
+enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *char_written)
+{
+    utils_assert(n != NULL);
+    utils_assert(stream != NULL);
+    utils_assert(char_written != NULL);
 
+    if(*line_ptr == NULL) {
+        *line_ptr = (char*)calloc(3, sizeof(char)); //REVIEW 3 = 'char'+'delim'+'\0'
+        if(*line_ptr == NULL) {
+            utils_log(LOG_LEVEL_ERR, "string buffer alllocation failed");
+            return IO_ERR_ALLOCATION_FAIL;
+        }
+        *n = 3;
+    }
+
+    size_t char_cnt = 0;
+    int stream_char = 0;
+    while(stream_char != '\n') {
+        stream_char = fgetc(stream);
+        if(stream_char == EOF)
+            return IO_ERR_EOF_REACHED;
+        
+        (*line_ptr)[char_cnt] = (char)stream_char;
+        
+        if(char_cnt < (*n - 2)) {
+            ++(*n);
+            char* reallocated_line_ptr = (char*)realloc(*line_ptr, (*n) * sizeof(char));
+            if(reallocated_line_ptr == NULL) {
+                utils_log(LOG_LEVEL_ERR, "string buffer reallocation failed");
+                free(line_ptr);
+                return IO_ERR_ALLOCATION_FAIL;
+            }
+            *line_ptr = reallocated_line_ptr;
+        }
+
+        ++char_cnt;
+    }
+
+    (*line_ptr)[char_cnt] = '\0';
+
+    *char_written = (ssize_t)char_cnt + 1l;
+
+    return IO_ERR_NONE;
+}
+
+char *utils_fgets(char *str, int count, FILE *stream)
+{
+    utils_assert(str != NULL);
+
+
+
+    return NULL;
+}

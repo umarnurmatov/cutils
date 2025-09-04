@@ -9,7 +9,7 @@ enum io_err_t
 {
     IO_ERR_EOF_REACHED,
     IO_ERR_ASSIGMENT_FAIL,
-    IO_ERR_ASSIGMENT_SUCCESS,
+    IO_ERR_ALLOCATION_FAIL,
     IO_ERR_NONE
 };
 
@@ -52,3 +52,7 @@ size_t get_file_size(FILE* file);
 char* bufferize_file(FILE* file);
 
 enum io_err_t utils_puts(const char* str);
+
+enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *char_written);
+
+char* utils_fgets(char* str, size_t count, FILE* stream);
