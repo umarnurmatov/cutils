@@ -170,11 +170,30 @@ enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *c
     return IO_ERR_NONE;
 }
 
-char *utils_fgets(char *str, int count, FILE *stream)
+char *utils_fgets(char *str, size_t count, FILE *stream)
 {
     utils_assert(str != NULL);
+    utils_assert(stream != NULL);
 
+    if(count == 1ul) {
+        utils_log(LOG_LEVEL_WARN, "done nothing");
+        return NULL;
+    }
 
+    size_t char_cnt = 0;
+    while(char_cnt <= count) {
+        int stream_char = fgetc(stream);
+        if(stream_char == EOF && char_cnt == 0)
+            return NULL;
 
-    return NULL;
+        str[char_cnt] = stream_char;
+        ++char_cnt;
+
+        if(stream_char == '\n')
+            break;
+    }
+
+    str[char_cnt] = '\0';
+
+    return str;
 }
