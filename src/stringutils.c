@@ -32,15 +32,10 @@ char* utils_strcpy(char *dest, const char *src)
 
     char* dest_char = dest;
     const char* src_char = src;
-    for(;;) {
-        *dest_char = *src_char;
+    for( ; *src_char != '\0'; ++src_char)
+        *(dest_char++) = *src_char;
 
-        if(*src_char == '\0')
-            break;
-        
-        ++src_char;
-        ++dest_char;
-    }
+    *dest_char = *src_char;
 
     return dest;
 }
@@ -50,12 +45,15 @@ char* utils_strncpy(char *dest, const char *src, size_t cnt)
     utils_assert(src != NULL);
     utils_assert(dest != NULL);
 
-    for(size_t n = 0; n < cnt; ++n) {
+    size_t n = 0;
+    for( ; n < cnt; ++n) {
         dest[n] = src[n];
 
         if(src[n] == '\0') 
             break;
     }
+
+    dest[n] = '\0';
 
     return dest;
 }
@@ -69,15 +67,10 @@ char *utils_strcat(char *dest, const char *src)
     for( ; *dest_char != '\0'; ++dest_char);
 
     const char* src_char = src;
-    for(;;) {
-        *dest_char = *src_char;
+    for( ; *src_char != '\0'; ++src_char)
+        *(dest_char++) = *src_char;
 
-        if(*src_char == '\0')
-            break;
-        
-        ++src_char;
-        ++dest_char;
-    }
+    *dest_char = *src_char;
 
     return dest;
 }
@@ -90,7 +83,7 @@ char *utils_strncat(char *dest, const char *src, size_t cnt)
     char* dest_end = dest;
     for( ; *dest_end != '\0'; ++dest_end);
 
-    for(size_t n = 0; n < cnt; ++n) {
+    for(size_t n = 0; n < cnt + 1; ++n) {
         dest_end[n] = src[n];
 
         if(src[n] == '\0') 
@@ -105,15 +98,12 @@ char *utils_strchr(const char *str, int ch)
     utils_assert(str != NULL);
 
     const char* str_char = str;
-    for(;;) {
+    for( ; *str_char != '\0'; ++str_char)
         if((int)(*str_char) == ch)
             return (char*)str_char;
 
-        if(*str_char == '\0')
-            break;
-
-        ++str_char;
-    }
+    if(ch == '\0')
+        return (char*)str_char;
 
     return NULL;
 }
@@ -138,12 +128,16 @@ int utils_atoi(const char *str)
     utils_assert(str != NULL);
 
     const char* str_end = str; 
-    for( ; *str != '\0'; ++str);
+    for( ; *str_end != '\0'; ++str_end);
 
+    if(str_end == str) 
+        return 0;
+
+    const char* str_char = str_end - 1;
     int str_int = 0;
     int exponent = 1;
 
-    for(const char* str_char = str_end - 1; str_char != str; --str_char) {
+    for( ; str_char != str; --str_char) {
         int digit = _ascii_to_digit(*str_char);
         if(digit == -1)
             return 0;
@@ -151,6 +145,11 @@ int utils_atoi(const char *str)
         str_int += digit * exponent;
         exponent *= 10;
     }
+
+    int digit = _ascii_to_digit(*str_char);
+    if(digit == -1)
+        return 0;
+    str_int += digit * exponent;
 
     return str_int;
 }
