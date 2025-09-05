@@ -17,3 +17,5 @@ char* utils_strchr(const char* str, int ch);
 char* utils_strdup(const char* src);
 
 int utils_atoi(const char* str);
+
+void utils_print_ascii_str(char* str);
