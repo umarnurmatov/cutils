@@ -53,6 +53,8 @@ char* bufferize_file(FILE* file);
 
 enum io_err_t utils_puts(const char* str);
 
+enum io_err_t utils_fputs(const char* str, FILE* stream);
+
 enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *char_written);
 
 char* utils_fgets(char* str, size_t count, FILE* stream);

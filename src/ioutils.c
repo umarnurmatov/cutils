@@ -109,16 +109,22 @@ char* bufferize_file(FILE *file)
 
 io_err_t utils_puts(const char *str)
 {
+    return utils_fputs(str, stdout);
+}
+
+io_err_t utils_fputs(const char *str, FILE *stream)
+{
     utils_assert(str != NULL);
+    utils_assert(stream != NULL);
 
     int err = 0;
     for(const char* str_char = str; *str_char != '\0'; ++str_char) {
-        err = fputc((int)(*str_char), stdout);
+        err = fputc((int)(*str_char), stream);
         if(err == EOF)
             return IO_ERR_EOF_REACHED;
     }
 
-    err = fputc((int)'\n', stdout);
+    err = fputc((int)'\n', stream);
     if(err == EOF)
         return IO_ERR_EOF_REACHED;
     
