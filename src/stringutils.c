@@ -129,6 +129,28 @@ char *utils_strdup(const char *src)
     return src_copy;
 }
 
+char *utils_strstr(const char *str, const char *substr)
+{
+    utils_assert(str != NULL);
+    utils_assert(substr != NULL);
+
+    size_t substr_len = utils_strlen(substr);
+    size_t str_len = utils_strlen(str);
+
+    if(substr_len == 0)
+        return (char*)_ptr_const_cast(str);
+
+    for(size_t i = 0; i < str_len; ++i) {
+        if(str_len - i < substr_len)
+            break;
+
+        if(strncmp((str + i), substr, substr_len) == 0)
+            return (char*)_ptr_const_cast(str + i);
+    }
+    
+    return NULL;
+}
+
 int utils_atoi(const char *str)
 {
     utils_assert(str != NULL);
