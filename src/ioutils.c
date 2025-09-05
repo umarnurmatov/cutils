@@ -132,12 +132,13 @@ enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *c
     utils_assert(char_written != NULL);
 
     if(*line_ptr == NULL) {
-        *line_ptr = (char*)calloc(3, sizeof(char)); //REVIEW 3 = 'char'+'delim'+'\0'
+        size_t new_size = sizeof(char) + sizeof('\n') + sizeof('\0');
+        *line_ptr = (char*)calloc(1, new_size);
         if(*line_ptr == NULL) {
             utils_log(LOG_LEVEL_ERR, "string buffer alllocation failed");
             return IO_ERR_ALLOCATION_FAIL;
         }
-        *n = 3;
+        *n = new_size;
     }
 
     size_t char_cnt = 0;
@@ -175,13 +176,14 @@ char *utils_fgets(char *str, size_t count, FILE *stream)
     utils_assert(str != NULL);
     utils_assert(stream != NULL);
 
-    if(count == 1ul) {
+    if(count <= 1ul) {
+        str[0] = '\0';
         utils_log(LOG_LEVEL_WARN, "done nothing");
-        return NULL;
+        return str;
     }
 
     size_t char_cnt = 0;
-    while(char_cnt <= count) {
+    while(char_cnt < count) {
         int stream_char = fgetc(stream);
         if(stream_char == EOF && char_cnt == 0)
             return NULL;
@@ -197,3 +199,4 @@ char *utils_fgets(char *str, size_t count, FILE *stream)
 
     return str;
 }
+
