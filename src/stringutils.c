@@ -62,7 +62,8 @@ char* utils_strncpy(char *dest, const char *src, size_t cnt)
             break;
     }
 
-    dest[n] = '\0';
+    for( ; n < cnt; ++n)
+        dest[n] = '\0';
 
     return dest;
 }
@@ -130,7 +131,7 @@ char *utils_strdup(const char *src)
         return NULL;
     }
 
-    mempcpy(src_copy, src, src_len + sizeof('\0'));
+    memcpy(src_copy, src, src_len + sizeof('\0'));
 
     return src_copy;
 }
