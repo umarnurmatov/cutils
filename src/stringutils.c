@@ -3,6 +3,7 @@
 #include <memory.h>
 #include <limits.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include "assertutils.h"
 #include "logutils.h"
@@ -12,6 +13,11 @@
 /// @param c char to convert
 /// @return digit on success, -1 on failure
 int _ascii_to_digit(char c);
+
+/// @brief converts char to sign if possible
+/// @param c char to convert
+/// @return 1 if c = '+', -1 if '-', 0 otherwise
+int _ascii_to_sign(char c);
 
 void* _ptr_const_cast(const void* ptr);
 
@@ -157,7 +163,10 @@ int utils_atoi(const char *str)
 
     // Skipping whitespaces
     const char* str_char = str; 
-    for( ; *str_char == ' '; ++str_char);
+    for( ; isspace(*str_char); ++str_char);
+
+    int sign = _ascii_to_sign(*str_char);
+    if(sign != 0) ++str_char;
 
     int str_int = 0;
     while(*str_char != '\0') {
@@ -165,7 +174,7 @@ int utils_atoi(const char *str)
         if(digit == -1)
             return 0;
 
-        str_int = 10 * str_int + digit; 
+        str_int = 10 * str_int + (sign != 0 ? sign : 1) * digit; 
 
         ++str_char;
     }
@@ -194,6 +203,15 @@ int _ascii_to_digit(char c)
         return digit;
 }
 
+int _ascii_to_sign(char c)
+{
+    if(c == '+')
+        return 1;
+    else if(c == '-')
+        return -1;
+    else
+        return 0;
+}
 
 void* _ptr_const_cast(const void* ptr)
 {
