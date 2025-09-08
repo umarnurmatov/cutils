@@ -62,6 +62,8 @@ enum log_err_t utils_init_log(const char* filename, const char* relpath)
     if(_log_data.stream == NULL) 
         _log_data.stream = stderr;
 
+    setvbuf(_log_data.stream, NULL, _IONBF, 0);
+
     if(utils_mtx_init(&_log_data.stream_mtx, mtx_plain) != thrd_success)
         return LOG_INIT_MTX_INIT_ERR;
 
