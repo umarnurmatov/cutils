@@ -10,4 +10,4 @@ add_link_options(${CXXFLAGS})
 
 add_library(${TARGET_NAME} ${sources})
 
-target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${TARGET_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
