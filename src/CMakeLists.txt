@@ -8,6 +8,6 @@ SET(CXXFLAGS -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive
 add_compile_options(${CXXFLAGS})
 add_link_options(${CXXFLAGS})
 
-add_executable(${TARGET_NAME} ${sources})
+add_library(${TARGET_NAME} ${sources})
 
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
