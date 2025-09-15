@@ -1,12 +1,12 @@
 set(TARGET_NAME cutils)
 
-file(GLOB_RECURSE sources *.c)
+file(GLOB_RECURSE SOURCES *.c)
 
-set_source_files_properties(${sources} PROPERTIES LANGUAGE CXX)
+set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE CXX)
 
-add_library(${TARGET_NAME} STATIC ${sources})
+add_library(${TARGET_NAME} STATIC ${SOURCES})
 
-SET(CXXFLAGS -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Wc++14-compat 
+SET(GCC_FLAGS -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Wc++14-compat 
     -Wmissing-declarations -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion 
     -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness 
     -Wformat=2 -Winline -Wlogical-op -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith 
@@ -15,12 +15,15 @@ SET(CXXFLAGS -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive
     -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wuseless-cast -Wvariadic-macros -Wno-literal-suffix 
     -Wno-missing-field-initializers -Wno-narrowing -Wno-old-style-cast -Wno-varargs -Wstack-protector -fcheck-new 
     -fsized-deallocation -fstack-protector -fstrict-overflow -flto-odr-type-merging -fno-omit-frame-pointer -Wlarger-than=8192 
-    -Wstack-usage=8192 -pie -fPIE -Werror=vla -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,
+    -Wstack-usage=8192 -pie -fPIE -Werror=vla)
+
+SET(SANITIZER_FLAGS -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,
     float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,
     shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 )
 
-target_compile_options(${TARGET_NAME} INTERFACE ${CXXFLAGS})
-target_link_options(${TARGET_NAME} INTERFACE ${CXXFLAGS})
+
+target_compile_options(${TARGET_NAME} PUBLIC ${GCC_FLAGS} ${SANITIZER_FLAGS})
+target_link_options(${TARGET_NAME} PUBLIC ${GCC_FLAGS} ${SANITIZER_FLAGS})
 
 target_include_directories(${TARGET_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
