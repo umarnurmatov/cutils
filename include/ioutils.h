@@ -46,15 +46,50 @@ char* get_current_working_dir();
 /// @return file size in bytes 
 size_t get_file_size(FILE* file);
 
-/// @brief reads file to buffer and returns pointer to that buffer
-/// @param file file to bufferize
-/// @return pointer to buffer 
+/// @brief   read file to buffer
+/// @details reads \p file contents to allocated buffer
+/// @param   file file to bufferize
+/// @return  pointer to buffer 
 char* bufferize_file(FILE* file);
 
+/// @brief   write string to stdout stream
+/// @details writes \p str contents to stdout stream
+///          and puts newline charachter in the end
+/// @param   str string to write
+/// @return  see \ref io_err_t
 enum io_err_t utils_puts(const char* str);
 
+/// @brief   write string to file
+/// @details writes \str contents to \p file filestream
+///          and puts newline charachter in the end
+/// @param   str string to write
+/// @return  see \ref io_err_t
 enum io_err_t utils_fputs(const char* str, FILE* stream);
 
+/// @brief   get '\\n'-ended string from file
+/// @details writes '\\n'-ended string from \p stream to
+///          buffer pointed by \p line_ptr; writes '\\n'
+///          and '\\0' charachters to the buffer end;\n
+///
+///          if buffer isn't large enough, reallocates 
+///          it using realloc(); buffer size is than 
+///          written to \p char_written and \p n
+/// @param   line_ptr pointer to a buffer where readed line will
+///          be stored
+/// @param   n            pointer to a buffer siza
+/// @param   stream       filestream to read from
+/// @param   char_written pointer to variable, where readed charachters
+///                       count will be stored
+/// @return  see \ref io_err_t
 enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *char_written);
 
+/// @brief get at most \p count charachters from file
+/// @details get at most \p count charachters from \p stream filestream
+///          and write it to \p str string;\n
+///
+///          if '\\n' charachter occured, stops
+/// @param   str    string buffer
+/// @param   count  charachters to read
+/// @param   stream filestream to read from
+/// @return  \p str
 char* utils_fgets(char* str, size_t count, FILE* stream);
