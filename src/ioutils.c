@@ -194,7 +194,7 @@ char *utils_fgets(char *str, size_t count, FILE *stream)
         if(stream_char == EOF && char_cnt == 0)
             return NULL;
 
-        str[char_cnt] = stream_char;
+        str[char_cnt] = (char)stream_char;
         ++char_cnt;
 
         if(stream_char == '\n')
