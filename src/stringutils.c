@@ -7,7 +7,6 @@
 
 #include "assertutils.h"
 #include "logutils.h"
-#include "utils.h"
 
 /// @brief converts char to digit if possible
 /// @param c char to convert
@@ -216,8 +215,8 @@ int _ascii_to_sign(char c)
 
 void* _ptr_const_cast(const void* ptr)
 {
-    // ptr can be NULL
     void* dest_ptr = NULL;
     memcpy(&dest_ptr, &ptr, sizeof(void*));
     return dest_ptr;
 }
+
