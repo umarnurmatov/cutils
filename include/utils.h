@@ -8,3 +8,8 @@
 #define SIZEOF(arr) sizeof(arr) / sizeof(*arr)
 
 static const int BYTE = __CHAR_BIT__;
+
+#define BEGIN    do
+#define GOTO_END break
+#define END      while(0)
+
