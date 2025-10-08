@@ -16,7 +16,6 @@ void utils_print_stacktrace(void)
     char** backtracce_strings = backtrace_symbols(backtrace_buffer, backtrace_size);
     if (backtracce_strings != NULL)
     {
-        utils_colored_fprintf(stderr, ANSI_COLOR_BOLD_WHITE, "Stack trace (%d stack frames):\n", backtrace_size);
         for(int i = 0; i < backtrace_size; ++i)
             utils_colored_fprintf(stderr, ANSI_COLOR_YELLOW, "%s\n", backtracce_strings[i]);
     }
