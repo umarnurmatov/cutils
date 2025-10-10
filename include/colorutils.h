@@ -26,3 +26,9 @@ ATTR_UNUSED static tty_mode_t ANSI_COLOR_RESET       = "\x1b[0m";
 /// @param fmtstring formatted string 
 void utils_colored_fprintf(FILE* stream, tty_mode_t mode, const char* fmtstring, ...)
     __attribute__ ((format (printf, 3, 4)));
+
+/// @brief function to print text with ANSI mode; checks if stream is console
+/// @param stream output stream
+/// @param mode ANSI color mode 
+/// @param fmtstring formatted string 
+void utils_colored_vfprintf(FILE* stream, tty_mode_t mode, const char* fmtstring, va_list vlist);

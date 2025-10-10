@@ -22,3 +22,20 @@ void utils_colored_fprintf(FILE *stream, tty_mode_t mode, const char *fmtstring,
     if(is_console)
         fputs(ANSI_COLOR_RESET, stream);
 }
+
+void utils_colored_vfprintf(FILE* stream, tty_mode_t mode, const char* fmtstring, va_list vlist)
+{
+    utils_assert(stream);
+    utils_assert(mode);
+    utils_assert(fmtstring);
+
+    int is_console = isatty(fileno(stream));
+
+    if(is_console)
+        fputs(mode, stream);
+
+    vfprintf(stream, fmtstring, vlist);
+
+    if(is_console)
+        fputs(ANSI_COLOR_RESET, stream);
+}
