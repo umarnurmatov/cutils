@@ -9,6 +9,7 @@
 #include <string.h>
 #include <linux/limits.h>
 
+#include "colorutils.h"
 #include "ioutils.h"
 #include "assertutils.h"
 #include "threadutils.h"
@@ -27,7 +28,7 @@ static struct _log_data_t _log_data = {
     .level_glob = LOG_LEVEL_DEBUG
 };
 
-enum log_err_t utils_init_log(const char* filename, const char* relpath)
+enum log_err_t utils_init_log_file(const char* filename, const char* relpath)
 {
     utils_assert(filename != NULL);
     utils_assert(relpath != NULL);
@@ -63,6 +64,16 @@ enum log_err_t utils_init_log(const char* filename, const char* relpath)
         _log_data.stream = stderr;
 
     setvbuf(_log_data.stream, NULL, _IONBF, 0);
+
+    if(utils_mtx_init(&_log_data.stream_mtx, mtx_plain) != thrd_success)
+        return LOG_INIT_MTX_INIT_ERR;
+
+    return LOG_INIT_SUCCESS;
+}
+
+enum log_err_t utils_init_log_stream(FILE* stream)
+{
+    _log_data.stream = stream;
 
     if(utils_mtx_init(&_log_data.stream_mtx, mtx_plain) != thrd_success)
         return LOG_INIT_MTX_INIT_ERR;
@@ -106,7 +117,8 @@ const char* utils_get_log_level_str(enum log_level_t log_level)
     }
 }
 
-void utils_log(enum log_level_t log_level, const char *fmtstring, ...)
+
+void utils_log(enum log_level_t log_level, const char* fmtstring, ...)
 {
     if(log_level > _log_data.level_glob)
         return;
@@ -133,6 +145,74 @@ void utils_log(enum log_level_t log_level, const char *fmtstring, ...)
     va_list va_arg_list;
     va_start(va_arg_list, fmtstring);
     vfprintf(_log_data.stream, fmtstring, va_arg_list);
+    va_end(va_arg_list);
+
+    fputc('\n', _log_data.stream);
+
+    utils_mtx_unlock(&_log_data.stream_mtx);
+}
+
+void utils_logc(enum log_level_t log_level, tty_mode_t mode, const char* category, const char* fmtstring, ...)
+{
+    if(log_level > _log_data.level_glob)
+        return;
+
+    utils_assert(_log_data.stream != NULL);
+
+    utils_mtx_lock(&_log_data.stream_mtx);
+
+    thrd_t cur_thread = thrd_current();
+
+    const char* log_level_str = utils_get_log_level_str(log_level);
+    time_t cur_time = time(NULL);
+    struct tm* iso_time = localtime(&cur_time);
+    char time_buff[MAX_TIME_STR_LEN];
+    strftime(time_buff, sizeof(time_buff), "%F %T", iso_time);
+    utils_colored_fprintf(
+        _log_data.stream, 
+        mode,
+        "[%s] [%s] [%s] [TID %lu] ", 
+        log_level_str, 
+        time_buff, 
+        category,
+        cur_thread
+    );
+
+    va_list va_arg_list;
+    va_start(va_arg_list, fmtstring);
+    utils_colored_vfprintf(_log_data.stream, ANSI_COLOR_BOLD_WHITE, fmtstring, va_arg_list);
+    va_end(va_arg_list);
+
+    fputc('\n', _log_data.stream);
+
+    utils_mtx_unlock(&_log_data.stream_mtx);
+}
+
+
+void utils_llogc(enum log_level_t log_level, tty_mode_t mode, const char* category, const char* file, int line, const char* func, const char* fmtstring, ...)
+{
+    if(log_level > _log_data.level_glob)
+        return;
+
+    utils_assert(_log_data.stream != NULL);
+
+    utils_mtx_lock(&_log_data.stream_mtx);
+    const char* log_level_str = utils_get_log_level_str(log_level);
+
+    utils_colored_fprintf(
+        _log_data.stream, 
+        mode,
+        "[%s] [%s] [from %s:%d %s()] ", 
+        log_level_str,
+        category,
+        file,
+        line,
+        func
+    );
+
+    va_list va_arg_list;
+    va_start(va_arg_list, fmtstring);
+    utils_colored_vfprintf(_log_data.stream, ANSI_COLOR_BOLD_WHITE, fmtstring, va_arg_list);
     va_end(va_arg_list);
 
     fputc('\n', _log_data.stream);
