@@ -4,10 +4,10 @@
 #include "colorutils.h"
 
 #define UTILS_LOGE(category, fmt, ...) \
-    utils_logc(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, fmt, __VA_ARGS__)
+    utils_logc(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, fmt __VA_OPT__(,) __VA_ARGS__)
 
 #define UTILS_LLOGE(category, fmt, ...) \
-    utils_llogc(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, __FILE__, __LINE__, __func__, fmt, __VA_ARGS__)
+    utils_llogc(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, __FILE__, __LINE__, __func__, fmt __VA_OPT__(,) __VA_ARGS__)
     
 
 /// @brief log level
