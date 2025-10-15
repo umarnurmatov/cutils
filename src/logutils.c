@@ -54,26 +54,20 @@ enum log_err_t utils_init_log_file(const char* filename, const char* relpath)
             cwd_path_len + relpath_len + filename_len + (size_t)3
         );
     sprintf(full_filepath, "%s/%s", full_path, filename);
-    _log_data.stream = open_file(full_filepath, "a");
+    FILE* stream = open_file(full_filepath, "a");
 
     free(cwd_path);
     free(full_path);
     free(full_filepath);
 
-    if(_log_data.stream == NULL) 
-        _log_data.stream = stderr;
-
-    setvbuf(_log_data.stream, NULL, _IONBF, 0);
-
-    if(utils_mtx_init(&_log_data.stream_mtx, mtx_plain) != thrd_success)
-        return LOG_INIT_MTX_INIT_ERR;
-
-    return LOG_INIT_SUCCESS;
+    return utils_init_log_stream(stream);
 }
 
 enum log_err_t utils_init_log_stream(FILE* stream)
 {
     _log_data.stream = stream;
+
+    setvbuf(_log_data.stream, NULL, _IONBF, 0);
 
     if(utils_mtx_init(&_log_data.stream_mtx, mtx_plain) != thrd_success)
         return LOG_INIT_MTX_INIT_ERR;
