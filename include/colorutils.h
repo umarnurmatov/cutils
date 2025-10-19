@@ -11,12 +11,16 @@ ATTR_UNUSED static tty_mode_t ANSI_COLOR_RED         = "\x1b[1;31m";
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_GREEN       = "\x1b[1;32m";
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_YELLOW      = "\x1b[1;33m";
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_BLUE        = "\x1b[1;34m";
+ATTR_UNUSED static tty_mode_t ANSI_COLOR_MAGENTA     = "\x1b[1;35m";
+ATTR_UNUSED static tty_mode_t ANSI_COLOR_CYAN        = "\x1b[1;36m";
 
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_WHITE  = "\x1b[1;38;5;15m";
-ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_RED    = "\x1b[1;38;5;160m";
+ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_RED    = "\x1b[1;38;5;196m";
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_GREEN  = "\x1b[1;38;5;82m";
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_YELLOW = "\x1b[1;38;5;226m";
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_BLUE   = "\x1b[1;38;5;27m";
+ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_CYAN   = "\x1b[1;38;5;39m";
+ATTR_UNUSED static tty_mode_t ANSI_COLOR_BOLD_MAGENTA= "\x1b[1;38;5;201m";
 
 ATTR_UNUSED static tty_mode_t ANSI_COLOR_RESET       = "\x1b[0m";
 
