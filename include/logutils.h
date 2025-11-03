@@ -56,6 +56,13 @@ const char* utils_get_log_level_str(enum log_level_t log_level);
 ///        use after calling utils_init_log_*();
 ///        is thread-safe
 /// @param fmtstring 
+void utils_log_fprintf(const char* fmtstring, ...)
+    __attribute__((format(printf, 1, 2)));
+
+/// @brief logs formatted string to output log stream;
+///        use after calling utils_init_log_*();
+///        is thread-safe
+/// @param fmtstring 
 void utils_log(enum log_level_t log_level, const char* fmtstring, ...)
     __attribute__((format(printf, 2, 3)));
 

@@ -54,7 +54,7 @@ enum log_err_t utils_init_log_file(const char* filename, const char* relpath)
             cwd_path_len + relpath_len + filename_len + (size_t)3
         );
     sprintf(full_filepath, "%s/%s", full_path, filename);
-    FILE* stream = open_file(full_filepath, "a");
+    FILE* stream = open_file(full_filepath, "w");
 
     free(cwd_path);
     free(full_path);
@@ -111,6 +111,19 @@ const char* utils_get_log_level_str(enum log_level_t log_level)
     }
 }
 
+void utils_log_fprintf(const char* fmtstring, ...)
+{
+    utils_assert(_log_data.stream != NULL);
+
+    utils_mtx_lock(&_log_data.stream_mtx);
+
+    va_list va_arg_list;
+    va_start(va_arg_list, fmtstring);
+    vfprintf(_log_data.stream, fmtstring, va_arg_list);
+    va_end(va_arg_list);
+
+    utils_mtx_unlock(&_log_data.stream_mtx);
+}
 
 void utils_log(enum log_level_t log_level, const char* fmtstring, ...)
 {
