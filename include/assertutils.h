@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef NDEBUG
+#ifdef _DEBUG
 #define utils_assert(expression) !!(expression) \
                                     ? (void)(0) \
                                     : utils_assert_fail(#expression, __FILE__, __LINE__)
