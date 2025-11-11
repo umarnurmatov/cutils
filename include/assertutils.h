@@ -4,9 +4,14 @@
 #define utils_assert(expression) !!(expression) \
                                     ? (void)(0) \
                                     : utils_assert_fail(#expression, __FILE__, __LINE__)
+
+#define asserted || utils_assert_fail(#expr, __FILE__, __LINE__)
 #else
 #define utils_assert(expression) (void)(0)
+#define asserted 
 #endif
+
+#define verified(expr) || ({ expr; false; })
 
 /// @brief prints stack trace to stderr 
 void utils_print_stacktrace(void);
