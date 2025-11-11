@@ -2,6 +2,20 @@
 
 #include <stdlib.h>
 
+#define UTILS_STR_INITLIST \
+    {                      \
+        .str = NULL,       \
+        .len = 0           \
+    }
+
+/// @brief struct representing string
+typedef struct utils_str_t
+{
+    char* str;
+    size_t len;
+} 
+utils_str_t;
+
 /// @brief string legth
 /// @param str null-terminated string
 size_t utils_strlen(const char* str);
