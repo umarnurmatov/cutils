@@ -136,10 +136,6 @@ void utils_log(enum log_level_t log_level, const char* fmtstring, ...)
     if(log_level > _log_data.level_glob)
         return;
 
-    utils_assert(_log_data.fstream);
-
-    utils_mtx_lock(&_log_data.stream_mtx);
-
     thrd_t cur_thread = thrd_current();
 
     const char* log_level_str = utils_get_log_level_str(log_level);
@@ -161,9 +157,7 @@ void utils_log(enum log_level_t log_level, const char* fmtstring, ...)
     vfprintf(stderr, fmtstring, va_arg_list);
     va_end(va_arg_list);
 
-    fputc('\n', _log_data.fstream);
-
-    utils_mtx_unlock(&_log_data.stream_mtx);
+    fputc('\n', stderr);
 }
 
 void utils_llog(enum log_level_t log_level, tty_mode_t mode, const char* category, const char* file, int line, const char* func, const char* fmtstring, ...)
@@ -171,13 +165,10 @@ void utils_llog(enum log_level_t log_level, tty_mode_t mode, const char* categor
     if(log_level > _log_data.level_glob)
         return;
 
-    utils_assert(_log_data.fstream != NULL);
-
-    utils_mtx_lock(&_log_data.stream_mtx);
     const char* log_level_str = utils_get_log_level_str(log_level);
 
     utils_colored_fprintf(
-        _log_data.fstream, 
+        stderr, 
         mode,
         "[%s] [%s] [from %s:%d %s()] ", 
         log_level_str,
@@ -189,10 +180,8 @@ void utils_llog(enum log_level_t log_level, tty_mode_t mode, const char* categor
 
     va_list va_arg_list;
     va_start(va_arg_list, fmtstring);
-    utils_colored_vfprintf(_log_data.fstream, ANSI_COLOR_BOLD_WHITE, fmtstring, va_arg_list);
+    utils_colored_vfprintf(stderr, ANSI_COLOR_BOLD_WHITE, fmtstring, va_arg_list);
     va_end(va_arg_list);
 
-    fputc('\n', _log_data.fstream);
-
-    utils_mtx_unlock(&_log_data.stream_mtx);
+    fputc('\n', stderr);
 }
