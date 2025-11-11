@@ -50,6 +50,23 @@ enum io_err_t input_double_until_correct(double *d)
     return errcode;
 }
 
+enum io_err_t input_string_until_correct(char** str, size_t* str_len)
+{
+    enum io_err_t errcode = IO_ERR_NONE;
+    ssize_t char_written = 0;
+    do {
+        errcode = utils_getline(str, str_len, stdin, &char_written);
+        if(errcode == IO_ERR_EOF_REACHED) {
+            fprintf(stderr, "\n\tEOF reached, exiting.\n");
+            return errcode;
+        }
+    } while(errcode != IO_ERR_NONE);
+
+    (*str)[char_written - 2] = '\0';
+
+    return IO_ERR_NONE;
+}
+
 FILE *open_file(const char *filename, const char *modes)
 {
     utils_assert(filename != NULL);
@@ -133,9 +150,12 @@ io_err_t utils_fputs(const char *str, FILE *stream)
 
 enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *char_written)
 {
-    utils_assert(n != NULL);
-    utils_assert(stream != NULL);
-    utils_assert(char_written != NULL);
+    utils_assert(n);
+    utils_assert(stream);
+    utils_assert(char_written);
+    utils_assert(line_ptr);
+
+    size_t n_tmp = *n;
 
     if(*line_ptr == NULL) {
         size_t new_size = sizeof(char) + sizeof('\n') + sizeof('\0');
@@ -144,7 +164,7 @@ enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *c
             utils_log(LOG_LEVEL_ERR, "string buffer alllocation failed");
             return IO_ERR_ALLOCATION_FAIL;
         }
-        *n = new_size;
+        n_tmp = new_size;
     }
 
     size_t char_cnt = 0;
@@ -156,9 +176,9 @@ enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *c
         
         (*line_ptr)[char_cnt] = (char)stream_char;
         
-        if(char_cnt < (*n - 2)) {
-            ++(*n);
-            char* reallocated_line_ptr = (char*)realloc(*line_ptr, (*n) * sizeof(char));
+        if(char_cnt < (n_tmp - 2)) {
+            ++n_tmp;
+            char* reallocated_line_ptr = (char*)realloc(*line_ptr, n_tmp * sizeof(char));
             if(reallocated_line_ptr == NULL) {
                 utils_log(LOG_LEVEL_ERR, "string buffer reallocation failed");
                 free(line_ptr);
@@ -173,6 +193,7 @@ enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *c
     (*line_ptr)[char_cnt] = '\0';
 
     *char_written = (ssize_t)char_cnt + 1l;
+    *n = n_tmp;
 
     return IO_ERR_NONE;
 }

@@ -26,6 +26,12 @@ enum io_err_t input_double(double *d);
 /// @return 1 if EOF occured in stdin, 0 otherwise
 enum io_err_t input_double_until_correct(double *d);
 
+/// @brief validated input of string until correct string entered; allocates buffer with malloc()
+/// @param[in] str pointer to pointer to memory where string will be stored
+/// @return see \ref io_err_t
+/// @return 1 
+enum io_err_t input_string_until_correct(char** str, size_t* str_len);
+
 /// @brief open file
 /// @param filename filename
 /// @param modes file open modes
