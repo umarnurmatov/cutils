@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <memory.h>
-
 #include <stdio.h>
 
 #include "assertutils.h"
+#include "logutils.h"
+
+#define LOG_CATEGORY_OPT "OPTIONS"
 
 /// @internal
 static int _utils_opt_arg_type_to_std(utils_opt_arg_type_t arg);
@@ -45,14 +47,17 @@ void utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int
 
         long_opts[opt_i].arg = optarg;
 
-        if(long_opts[opt_i].opt_type == OPT_ARG_REQUIRED 
-                && !optarg) {
+        if(long_opts[opt_i].opt_type == OPT_ARG_REQUIRED && ret_val == '?') {
             long_opts[opt_i].is_set = 0;
             continue;
         }
 
         long_opts[opt_i].is_set = 1;
     }
+
+    for(int ind = 0; ind < count; ++ind)
+        if(!long_opts[ind].is_set)
+            UTILS_LOGE(LOG_CATEGORY_OPT, "log option --%s must be set", long_opts[ind].name);
     
     free(long_opts_);
 }
