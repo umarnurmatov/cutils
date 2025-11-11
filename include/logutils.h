@@ -4,10 +4,7 @@
 #include "colorutils.h"
 
 #define UTILS_LOGE(category, fmt, ...) \
-    utils_logc(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, fmt __VA_OPT__(,) __VA_ARGS__)
-
-#define UTILS_LLOGE(category, fmt, ...) \
-    utils_llogc(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, __FILE__, __LINE__, __func__, fmt __VA_OPT__(,) __VA_ARGS__)
+    utils_llog(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, __FILE__, __LINE__, __func__, fmt __VA_OPT__(,) __VA_ARGS__)
     
 
 /// @brief log level
@@ -25,6 +22,7 @@ enum log_level_t
 enum log_err_t
 {
     LOG_INIT_MTX_INIT_ERR,
+    LOG_IO_ERR,
     LOG_INIT_SUCCESS
 };
 
@@ -34,11 +32,6 @@ enum log_err_t
 /// @param relpath dir relpath relative to current working dir
 /// @return see log_err_t
 enum log_err_t utils_init_log_file(const char* filename, const char* relpath);
-
-/// @brief initilizes log to an existing stream
-/// @param stream filestream
-/// @return see log_err_t
-enum log_err_t utils_init_log_stream(FILE* stream);
 
 /// @brief closes log filestream
 void utils_end_log(void);
@@ -59,28 +52,16 @@ const char* utils_get_log_level_str(enum log_level_t log_level);
 void utils_log_fprintf(const char* fmtstring, ...)
     __attribute__((format(printf, 1, 2)));
 
-/// @brief logs formatted string to output log stream;
-///        use after calling utils_init_log_*();
+/// @brief logs formatted string to stderr
 ///        is thread-safe
 /// @param fmtstring 
 void utils_log(enum log_level_t log_level, const char* fmtstring, ...)
     __attribute__((format(printf, 2, 3)));
 
-/// @brief logs formatted string to output log stream;
-///        use after calling utils_init_log_*();
+/// @brief logs formatted string to stderr with source location;
 ///        is thread-safe
 /// @param mode print mode
 /// @param category logging category
 /// @param fmtstring 
-void utils_logc(enum log_level_t log_level, tty_mode_t mode, const char* category, const char* fmtstring, ...)
-    __attribute__((format(printf, 4, 5)));
-
-
-/// @brief logs formatted string to output log stream with source location;
-///        use after calling utils_init_log_*();
-///        is thread-safe
-/// @param mode print mode
-/// @param category logging category
-/// @param fmtstring 
-void utils_llogc(enum log_level_t log_level, tty_mode_t mode, const char* category, const char* file, int line, const char* func, const char* fmtstring, ...)
+void utils_llog(enum log_level_t log_level, tty_mode_t mode, const char* category, const char* file, int line, const char* func, const char* fmtstring, ...)
     __attribute__((format(printf, 7, 8)));
