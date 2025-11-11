@@ -6,6 +6,14 @@
 #define UTILS_LOGE(category, fmt, ...) \
     utils_llog(LOG_LEVEL_ERR, ANSI_COLOR_BOLD_RED, category, __FILE__, __LINE__, __func__, fmt __VA_OPT__(,) __VA_ARGS__)
     
+#define UTILS_LOGW(category, fmt, ...) \
+    utils_llog(LOG_LEVEL_WARN, ANSI_COLOR_BOLD_RED, category, __FILE__, __LINE__, __func__, fmt __VA_OPT__(,) __VA_ARGS__)
+
+#define UTILS_LOGI(category, fmt, ...) \
+    utils_llog(LOG_LEVEL_INFO, ANSI_COLOR_BOLD_WHITE, category, __FILE__, __LINE__, __func__, fmt __VA_OPT__(,) __VA_ARGS__)
+
+#define UTILS_LOGD(category, fmt, ...) \
+    utils_llog(LOG_LEVEL_DEBUG, ANSI_COLOR_BOLD_GREEN, category, __FILE__, __LINE__, __func__, fmt __VA_OPT__(,) __VA_ARGS__)
 
 /// @brief log level
 ///        LOG_LEVEL_ERR is the highest priority,
