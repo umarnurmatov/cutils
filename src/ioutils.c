@@ -104,14 +104,14 @@ char *get_current_working_dir()
 
 size_t get_file_size(FILE *file)
 {
-    utils_assert(file != NULL);
+    utils_assert(file);
 
-    fseek(file, 0L, SEEK_END);
-    long size_bytes = ftell(file);
-
-    fseek(file, 0L, SEEK_SET);
+    struct stat sb;
+    if(fstat(fileno(file), &sb) == -1)
+        return 0;
 
     return (size_t)size_bytes;
+    return (size_t)sb.st_size;
 }
 
 char* bufferize_file(FILE *file)
