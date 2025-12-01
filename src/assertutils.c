@@ -35,32 +35,31 @@ static char* utils_demangle_backtrace_string_cxx_(char* str)
 }
 
 #define BUF_SIZE 100
-static const char* utils_demangle_backtrace_string_c_(char* str)
+static const char* utils_demangle_backtrace_string_c_(void* buffer, char* str)
 {
-    static Dl_info info;
-    static char buffer[BUF_SIZE];
-
-    if(dladdr(str, &info))
-        return info.dli_sname;
+    Dl_info info;
 
     return str;
 }
 
 static void utils_print_stacktrace_(void)
 {
-    void** backtrace_buffer = (void**)calloc(MAX_STACKTRACE_SIZE, sizeof(void*));
+    // void** backtrace_buffer = (void**)calloc(MAX_STACKTRACE_SIZE, sizeof(void*));
+    void* backtrace_buffer[MAX_STACKTRACE_SIZE] = {};
 
     int backtrace_size = backtrace(backtrace_buffer, MAX_STACKTRACE_SIZE);
     char** backtrace_strings = backtrace_symbols(backtrace_buffer, backtrace_size);
     if (backtrace_strings != NULL)
     {
         for(int i = 0; i < backtrace_size; ++i) {
-            utils_colored_fprintf(stderr, ANSI_COLOR_YELLOW, "%s\n", utils_demangle_backtrace_string_c_(backtrace_strings[i]));
+            Dl_info info;
+            dladdr(backtrace_buffer[i], &info);
+            utils_colored_fprintf(stderr, ANSI_COLOR_YELLOW, "%s\n", info.dli_sname ? info.dli_sname : backtrace_strings[i]);
         }
     }
 
     free(backtrace_strings);
-    free(backtrace_buffer);
+    // free(backtrace_buffer);
 }
 
 void utils_assert_fail(const char *expression, const char *filename, int linenumber)
