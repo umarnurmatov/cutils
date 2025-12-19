@@ -8,6 +8,8 @@
 #include "assertutils.h"
 #include "logutils.h"
 
+#define LOG_CATEGORY_IO "IO"
+
 void clear_stdin_buffer()
 {
     int buffered_char;
@@ -73,13 +75,8 @@ FILE *open_file(const char *filename, const char *modes)
 
     FILE* file = fopen(filename, modes);
 
-    if(file == NULL)
-        utils_colored_fprintf(
-            stderr,
-            ANSI_COLOR_BOLD_RED,
-            "Could not open file <%s>\n",
-            filename 
-        );
+    if(!file)
+        UTILS_LOGE(LOG_CATEGORY_IO, "Error opening file <%s>", filename);
 
     return file;
 }
@@ -92,8 +89,9 @@ int create_dir(const char *path)
     __mode_t permissions = S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
     int err = mkdir(path, permissions);
 
-    if(err == -1) 
+    if(err == -1)
         return 1;
+
     return 0;
 }
 
@@ -110,7 +108,6 @@ size_t get_file_size(FILE *file)
     if(fstat(fileno(file), &sb) == -1)
         return 0;
 
-    return (size_t)size_bytes;
     return (size_t)sb.st_size;
 }
 
