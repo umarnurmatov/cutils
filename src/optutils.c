@@ -3,17 +3,16 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <memory.h>
+
 #include <stdio.h>
 
 #include "assertutils.h"
 #include "logutils.h"
 
-#define LOG_CATEGORY_OPT "OPTIONS"
-
 /// @internal
 static int _utils_opt_arg_type_to_std(utils_opt_arg_type_t arg);
 
-void utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int count)
+int utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int count)
 {
     utils_assert(long_opts != NULL);
     utils_assert(count > 0);
@@ -47,7 +46,8 @@ void utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int
 
         long_opts[opt_i].arg = optarg;
 
-        if(long_opts[opt_i].opt_type == OPT_ARG_REQUIRED && ret_val == '?') {
+        if(long_opts[opt_i].opt_type == OPT_ARG_REQUIRED 
+                && !optarg) {
             long_opts[opt_i].is_set = 0;
             continue;
         }
@@ -55,11 +55,15 @@ void utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int
         long_opts[opt_i].is_set = 1;
     }
 
-    for(int ind = 0; ind < count; ++ind)
-        if(!long_opts[ind].is_set)
-            UTILS_LOGE(LOG_CATEGORY_OPT, "log option --%s must be set", long_opts[ind].name);
+    for(int i = 0; i < count; ++i)
+        if(long_opts[i].opt_type == OPT_ARG_REQUIRED && !long_opts[i].is_set) {
+            UTILS_LOGE("OPTIONS", "%s option is not set", long_opts[i].name);
+            return 0;
+        }
     
     free(long_opts_);
+
+    return 1;
 }
 
 int _utils_opt_arg_type_to_std(utils_opt_arg_type_t arg)

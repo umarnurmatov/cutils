@@ -32,5 +32,5 @@ typedef struct utils_long_opt_t
 /// @param argv provided by main()
 /// @param long_opts options array, see \ref utils_long_opt_t
 /// @param count \p long_opts size
-void utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int count);
+int utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int count);
 
