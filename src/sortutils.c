@@ -1,11 +1,13 @@
 #include "sortutils.h"
 
-#include <cstdio>
+#include <stdio.h>
 #include <memory.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 #include "assertutils.h"
 
-static const int _SCRATCH_BUF_SIZE_B = 32;
+#define _SCRATCH_BUF_SIZE_B 32
 
 static void _utils_swap_on_buf(void* x, void* y, size_t tsize, char* buf);
 

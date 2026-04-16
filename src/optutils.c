@@ -17,7 +17,7 @@ int utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int 
     utils_assert(long_opts != NULL);
     utils_assert(count > 0);
 
-    option* long_opts_ = (option*)calloc((size_t)count + 1ul, sizeof(option));
+    struct option* long_opts_ = (struct option*)calloc((size_t)count + 1ul, sizeof(struct option));
     for(int opt_i = 0ul; opt_i < count; ++opt_i) {
         long_opts[opt_i]._val = opt_i;
 
@@ -37,7 +37,7 @@ int utils_long_opt_get(int argc, char* argv[], utils_long_opt_t* long_opts, int 
             argc, 
             argv, 
             "", 
-            (const option*)long_opts_, 
+            (const struct option*)long_opts_, 
             &opt_i
         );
 

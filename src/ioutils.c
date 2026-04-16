@@ -1,5 +1,6 @@
 #include "ioutils.h"
 
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -18,7 +19,7 @@ void clear_stdin_buffer()
     } while((buffered_char != '\n') && (buffered_char != EOF));
 }
 
-enum io_err_t input_double(double *d)
+io_err_t input_double(double *d)
 {
     int assigned = scanf(" %lf", d);
     clear_stdin_buffer();
@@ -36,9 +37,9 @@ enum io_err_t input_double(double *d)
     }
 }
 
-enum io_err_t input_double_until_correct(double *d)
+io_err_t input_double_until_correct(double *d)
 {
-    enum io_err_t errcode = IO_ERR_NONE;
+    io_err_t errcode = IO_ERR_NONE;
     do {
         errcode = input_double(d);
         if(errcode == IO_ERR_EOF_REACHED) {
@@ -52,9 +53,9 @@ enum io_err_t input_double_until_correct(double *d)
     return errcode;
 }
 
-enum io_err_t input_string_until_correct(char** str, size_t* str_len)
+io_err_t input_string_until_correct(char** str, size_t* str_len)
 {
-    enum io_err_t errcode = IO_ERR_NONE;
+    io_err_t errcode = IO_ERR_NONE;
     ssize_t char_written = 0;
     do {
         errcode = utils_getline(str, str_len, stdin, &char_written);
@@ -145,7 +146,7 @@ io_err_t utils_fputs(const char *str, FILE *stream)
     return IO_ERR_NONE;
 }
 
-enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *char_written)
+io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, size_t *char_written)
 {
     utils_assert(n);
     utils_assert(stream);

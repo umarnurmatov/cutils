@@ -11,7 +11,7 @@
 #define asserted 
 #endif
 
-#define verified(expr) || ({ expr; false; })
+#define verified(expr) || ({ expr; 0; })
 
 /// @brief prints failed assertion info  and stack trace to stderr (see utils_assert macro)
 /// @param expression string containing asserted expression

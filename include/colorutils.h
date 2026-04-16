@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdio.h>
+#include <stdarg.h>
 
-#include "assertutils.h"
 #include "utils.h"
 
 typedef const char* tty_mode_t;

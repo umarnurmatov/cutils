@@ -15,7 +15,7 @@
 #include "assertutils.h"
 #include "threadutils.h"
 
-static const int MAX_TIME_STR_LEN = 70;
+#define MAX_TIME_STR_LEN 70
 
 struct _log_data_t
 {

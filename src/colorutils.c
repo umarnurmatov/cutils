@@ -2,6 +2,9 @@
 
 #include <stdarg.h>
 #include <unistd.h>
+#include <stdio.h>
+
+#include "assertutils.h"
 
 void utils_colored_fprintf(FILE *stream, tty_mode_t mode, const char *fmtstring, ...)
 {

@@ -1,17 +1,17 @@
 #pragma once
 
+#include <stdint.h>
 #include <stdio.h>
 
-#include "colorutils.h"
 
 /// @brief input error types
-enum io_err_t
+typedef enum 
 {
     IO_ERR_EOF_REACHED,
     IO_ERR_ASSIGMENT_FAIL,
     IO_ERR_ALLOCATION_FAIL,
     IO_ERR_NONE
-};
+} io_err_t;
 
 /// @brief clears stdin buffer until reaches \\n or EOF
 void clear_stdin_buffer();
@@ -19,18 +19,18 @@ void clear_stdin_buffer();
 /// @brief validated input of floating-point numeric value
 /// @param d pointer to variable where inputed value will be stored
 /// @return see io_err_t for explanations
-enum io_err_t input_double(double *d);
+io_err_t input_double(double *d);
 
 /// @brief validated input of floating-point numeric value until correct value entered
 /// @param d pointer to variable where inputed value will be stored
 /// @return 1 if EOF occured in stdin, 0 otherwise
-enum io_err_t input_double_until_correct(double *d);
+io_err_t input_double_until_correct(double *d);
 
 /// @brief validated input of string until correct string entered; allocates buffer with malloc()
 /// @param[in] str pointer to pointer to memory where string will be stored
 /// @return see \ref io_err_t
 /// @return 1 
-enum io_err_t input_string_until_correct(char** str, size_t* str_len);
+io_err_t input_string_until_correct(char** str, size_t* str_len);
 
 /// @brief open file
 /// @param filename filename
@@ -63,14 +63,14 @@ char* bufferize_file(FILE* file);
 ///          and puts newline charachter in the end
 /// @param   str string to write
 /// @return  see \ref io_err_t
-enum io_err_t utils_puts(const char* str);
+io_err_t utils_puts(const char* str);
 
 /// @brief   write string to file
 /// @details writes \str contents to \p file filestream
 ///          and puts newline charachter in the end
 /// @param   str string to write
 /// @return  see \ref io_err_t
-enum io_err_t utils_fputs(const char* str, FILE* stream);
+io_err_t utils_fputs(const char* str, FILE* stream);
 
 /// @brief   get '\\n'-ended string from file
 /// @details writes '\\n'-ended string from \p stream to
@@ -87,7 +87,7 @@ enum io_err_t utils_fputs(const char* str, FILE* stream);
 /// @param   char_written pointer to variable, where readed charachters
 ///                       count will be stored
 /// @return  see \ref io_err_t
-enum io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, ssize_t *char_written);
+io_err_t utils_getline(char **line_ptr, size_t *n, FILE *stream, size_t *char_written);
 
 /// @brief get at most \p count charachters from file
 /// @details get at most \p count charachters from \p stream filestream
